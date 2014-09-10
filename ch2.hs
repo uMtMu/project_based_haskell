@@ -17,8 +17,8 @@ clientName client = case client of
                         GovOrg name                         -> Just name
                         Company name _ _ _                  -> Just name
                         Individual (Person fname lname _) _ -> Just $ fname ++ " " ++ lname
-                        _                                   -> Nothing
 
+genderCounter :: [Client] -> String
 genderCounter clients = printGender $ genderIdentify (0, 0) clients 
                             where
                                 genderIdentify (m, f) [] = (m, f)
@@ -36,7 +36,13 @@ genderCounter clients = printGender $ genderIdentify (0, 0) clients
 
 discountTimeMachine percentage tms = map (discount percentage) tms
                                         where discount percentage (TimeMachine manufacturer model name direction price) = TimeMachine manufacturer model name direction (price * percentage)
-    
+
+ackermann m n   |  m == 0          = n + 1
+                | (n == 0) && (m > 0) = ackermann (m - 1) 1
+                | (n > 0)  && (m > 0) = ackermann (m - 1) (ackermann m (n - 1))
+--main = print $ ackermann 1 0
+
+
 main = do let clients = [GovOrg "NSA",
                         Company "CIA" 12 (Person "John" "Nash" Male) "Head",
                         Individual (Person "Eric" "Bana" Male) True]

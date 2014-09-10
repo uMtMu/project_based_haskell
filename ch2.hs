@@ -1,3 +1,5 @@
+{-# LANGUAGE ViewPatterns #-}
+
 data Client = GovOrg String
             | Company String Integer Person String
             | Individual Person Bool
@@ -34,14 +36,24 @@ genderCounter clients = printGender $ genderIdentify (0, 0) clients
                                     _                            -> genderIdentify (m, f) xs
                                 printGender (m, f) = "we have " ++ show m ++ " male and " ++ show f ++ " female client"
 
+discountTimeMachine :: Float -> [TimeMachine] -> [TimeMachine]
 discountTimeMachine percentage tms = map (discount percentage) tms
                                         where discount percentage (TimeMachine manufacturer model name direction price) = TimeMachine manufacturer model name direction (price * percentage)
 
+ackermann :: Integer -> Integer -> Integer
 ackermann m n   |  m == 0          = n + 1
                 | (n == 0) && (m > 0) = ackermann (m - 1) 1
                 | (n > 0)  && (m > 0) = ackermann (m - 1) (ackermann m (n - 1))
 --main = print $ ackermann 1 0
 
+responsibility :: Client -> Maybe String
+responsibility (Company _ _ _ r) = Just r
+responsibility _                 = Nothing
+
+specialClient :: Client -> Bool
+specialClient (clientName -> Just "Mr. Enya") = True
+specialClient (responsibility -> Just "Director") = True
+specialClient _ = False
 
 main = do let clients = [GovOrg "NSA",
                         Company "CIA" 12 (Person "John" "Nash" Male) "Head",
